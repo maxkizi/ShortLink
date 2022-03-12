@@ -10,10 +10,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class LinkServiceExceptionHandler {
     private static final String NOT_WORKING_LINK_MESSAGE = "Нерабочая ссылка, проверьте ссылку перед использованием";
+    private static final String LINK_NOT_FOUND_MESSAGE = "Ссылка (информация по ссылке)  не найдена";
 
     @ExceptionHandler({NotWorkingLinkException.class})
-    @ResponseStatus(HttpStatus.OK)
-    public String handleRestClientException() {
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleNotWorkingLinkException() {
         return NOT_WORKING_LINK_MESSAGE;
+    }
+
+    @ExceptionHandler({LinkNotFoundException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleLinkNotFoundException() {
+        return LINK_NOT_FOUND_MESSAGE;
     }
 }

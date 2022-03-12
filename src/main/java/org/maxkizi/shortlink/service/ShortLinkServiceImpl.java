@@ -3,6 +3,9 @@ package org.maxkizi.shortlink.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.maxkizi.shortlink.converter.LinkEntityConverter;
+import org.maxkizi.shortlink.dto.LinkEntityDto;
+import org.maxkizi.shortlink.exception.LinkNotFoundException;
 import org.maxkizi.shortlink.exception.NotWorkingLinkException;
 import org.maxkizi.shortlink.model.LinkEntity;
 import org.maxkizi.shortlink.repository.LinkRepository;
@@ -20,29 +23,44 @@ public class ShortLinkServiceImpl implements ShortLinkService {
     private static final String WEB = "web";
     private static final String HTTPS = "https";
     private final LinkRepository repository;
+    private final LinkEntityConverter converter;
 
 
     @Override
-    public String getFullLink(String shortLink) {
+    public String findLinkEntity(String shortLink) {
         return repository.findById(shortLink).orElseThrow(RuntimeException::new).getFullLink();
     }
 
     @Override
     public String createShortLink(String fullLink) {
-        checkHealth(fullLink);
         String shortLink = generateShortLink(fullLink);
-        repository.save(
-                LinkEntity.builder()
-                        .shortLink(shortLink)
-                        .fullLink(fullLink)
-                        .createdAt(new Date())
-                        .build());
+        if (!repository.existsById(shortLink)) {
+            checkHealth(fullLink);
+            repository.save(LinkEntity.builder()
+                    .shortLink(shortLink)
+                    .fullLink(fullLink)
+                    .createdAt(new Date())
+                    .build());
+        }
         return shortLink;
+    }
+
+    @Override
+    public void incrementCountOfCalls(String shortLink) {
+        LinkEntity linkEntity = repository.findById(shortLink).orElseThrow(LinkNotFoundException::new);
+        linkEntity.setCountOfCalls(linkEntity.getCountOfCalls() + 1);
+        linkEntity.setCreatedAt(linkEntity.getCreatedAt());
+        repository.save(linkEntity);
     }
 
     @Override
     public void deleteLink(String shortLink) {
         repository.deleteById(shortLink);
+    }
+
+    @Override
+    public LinkEntityDto getAnalytics(String shortLink) {
+        return converter.toDto(repository.findById(shortLink).orElseThrow(LinkNotFoundException::new));
     }
 
     //TODO: доделать для ссылок менее четырёх символов
