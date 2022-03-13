@@ -5,31 +5,42 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.maxkizi.shortlink.converter.LinkEntityConverter;
 import org.maxkizi.shortlink.dto.LinkEntityDto;
+import org.maxkizi.shortlink.exception.ExpireLinkException;
 import org.maxkizi.shortlink.exception.LinkNotFoundException;
 import org.maxkizi.shortlink.exception.NotWorkingLinkException;
 import org.maxkizi.shortlink.model.LinkEntity;
 import org.maxkizi.shortlink.repository.LinkRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class ShortLinkServiceImpl implements ShortLinkService {
-    private static final String WEB = "web";
+    private static final String WWW = "www";
     private static final String HTTPS = "https";
     private final LinkRepository repository;
     private final LinkEntityConverter converter;
 
+    @Value("${expirationMinutes}")
+    private Long expirationMinutes;
+
 
     @Override
-    public String findLinkEntity(String shortLink) {
-        return repository.findById(shortLink).orElseThrow(RuntimeException::new).getFullLink();
+    public void redirect(String shortLink, HttpServletResponse response) throws IOException {
+        LinkEntity linkEntity = repository.findById(shortLink).orElseThrow(LinkNotFoundException::new);
+        checkExpiration(linkEntity);
+        response.sendRedirect(linkEntity.getFullLink());
+        incrementCountOfCalls(linkEntity);
     }
+
 
     @Override
     public String createShortLink(String fullLink) {
@@ -46,14 +57,6 @@ public class ShortLinkServiceImpl implements ShortLinkService {
     }
 
     @Override
-    public void incrementCountOfCalls(String shortLink) {
-        LinkEntity linkEntity = repository.findById(shortLink).orElseThrow(LinkNotFoundException::new);
-        linkEntity.setCountOfCalls(linkEntity.getCountOfCalls() + 1);
-        linkEntity.setCreatedAt(linkEntity.getCreatedAt());
-        repository.save(linkEntity);
-    }
-
-    @Override
     public void deleteLink(String shortLink) {
         repository.deleteById(shortLink);
     }
@@ -63,11 +66,17 @@ public class ShortLinkServiceImpl implements ShortLinkService {
         return converter.toDto(repository.findById(shortLink).orElseThrow(LinkNotFoundException::new));
     }
 
+    private void incrementCountOfCalls(LinkEntity linkEntity) {
+        linkEntity.setCountOfCalls(linkEntity.getCountOfCalls() + 1);
+        linkEntity.setCreatedAt(linkEntity.getCreatedAt());
+        repository.save(linkEntity);
+    }
+
     //TODO: доделать для ссылок менее четырёх символов
     private String generateShortLink(String fullLink) {
         StringBuilder stringBuilder = new StringBuilder();
         String[] linkParts = fullLink.split("\\.");
-        if (fullLink.contains(WEB)) {
+        if (fullLink.contains(WWW)) {
             stringBuilder.append(linkParts[1]);
         } else {
             String httpOrHttpsLink = linkParts[0];
@@ -88,6 +97,16 @@ public class ShortLinkServiceImpl implements ShortLinkService {
         } catch (RestClientException e) {
             log.error("Нерабочая ссылка: {}", fullLink);
             throw new NotWorkingLinkException();
+        }
+    }
+
+    private void checkExpiration(LinkEntity linkEntity) {
+        long currentTimeInMinutes = new Date().getTime() / 1000 / 60;
+        long createdTimeInMinutes = linkEntity.getCreatedAt().getTime() / 1000 / 60;
+
+        if((currentTimeInMinutes - createdTimeInMinutes) >= expirationMinutes){
+            repository.deleteById(linkEntity.getShortLink());
+            throw new ExpireLinkException();
         }
     }
 }

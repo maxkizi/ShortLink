@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static org.maxkizi.shortlink.controller.Controllers.BY_SHORT_LINK;
 import static org.maxkizi.shortlink.controller.Controllers.DELETE;
 import static org.maxkizi.shortlink.controller.Controllers.GET_ANALYTICS;
 import static org.maxkizi.shortlink.controller.Controllers.GET_SHORT_LINK;
@@ -31,9 +30,7 @@ public class LinkController {
 
     @GetMapping(REDIRECT)
     public void redirect(HttpServletResponse response, @PathVariable(name = "shortLink") String shortLink) throws IOException {
-        String fullLink = service.findLinkEntity(shortLink);
-        response.sendRedirect(fullLink);
-        service.incrementCountOfCalls(shortLink);
+         service.redirect(shortLink, response);
     }
 
     @GetMapping(GET_ANALYTICS)

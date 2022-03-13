@@ -12,3 +12,5 @@ spring:
     open-in-view: false
   liquibase:
     change-log: classpath:/db/liquibase-changelog.xml
+
+expirationMinutes: 1

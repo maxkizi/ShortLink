@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class LinkServiceExceptionHandler {
     private static final String NOT_WORKING_LINK_MESSAGE = "Нерабочая ссылка, проверьте ссылку перед использованием";
     private static final String LINK_NOT_FOUND_MESSAGE = "Ссылка (информация по ссылке)  не найдена";
+    private static final String EXPIRATION_MESSAGE = "Время жизни ссылки истекло, ссылка будет удалена";
 
     @ExceptionHandler({NotWorkingLinkException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -22,5 +23,11 @@ public class LinkServiceExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleLinkNotFoundException() {
         return LINK_NOT_FOUND_MESSAGE;
+    }
+
+    @ExceptionHandler({ExpireLinkException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleExpireLinkException() {
+        return EXPIRATION_MESSAGE;
     }
 }
