@@ -12,12 +12,25 @@ services:
     restart: always
 
   shortlink-service:
-    container_name: shortlink-service
-    build: .
-    image: shortlink-image
+    container_name: shortlink-base-service
+    build: shortlink-base-service/
+    image: shortlink-base-service-image
+    depends_on:
+      - authentication-service
     ports:
       - 8080:8080
     environment:
       - "SPRING_PROFILES_ACTIVE=prod"
+    restart: always
+
+  authentication-service:
+    container_name: shortlink-authentication-service
+    build: shortlink-authentication-service/
+    image: shortlink-authentication-service-image
+    ports:
+      - 8081:8081
+    environment:
+      - "SPRING_PROFILES_ACTIVE=prod"
     depends_on:
       - postgres
+    restart: always

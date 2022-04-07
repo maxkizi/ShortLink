@@ -1,0 +1,81 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet id="1" author="maxkizi">
+        <createTable tableName="link_table" remarks="Таблица ссылок">
+            <column name="short_link" type="text" autoIncrement="false" remarks="Короткая ссылка (id)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="full_link" type="text" remarks="Полная ссылка">
+                <constraints nullable="false"/>
+            </column>
+            <column name="call_count" type="bigint" remarks="Колличество вызовов">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="datetime" remarks="Дата создания">
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="maxkizi">
+        <createTable tableName="application_user" remarks="Таблица пользователей сервиса">
+            <column name="id" type="bigserial" autoIncrement="true" remarks="Id пользователя">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="first_name" type="text" remarks="Имя пользователя">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="text" remarks="Фамилия пользователя">
+                <constraints nullable="false"/>
+            </column>
+            <column name="login" type="text" remarks="Имя пользователя">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="password" type="text" remarks="Пароль пользователя">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_enabled" type="boolean" remarks="Флаг  пользователя" value="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_credentials_non_expired" type="boolean" remarks="Флаг экспирации данных аутентификации" value="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_account_non_locked" type="boolean" remarks="Флаг блокировки аккаунта" value="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_account_non_expired" type="boolean" remarks="Флаг экспирации аккаунта" value="true">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="maxkizi">
+        <createTable tableName="application_user_role" remarks="Таблица ролей пользователя">
+            <column name="id" type="text" remarks="Уникальное имя роли">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="description" type="text"  remarks="Описание роли">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4" author="maxkizi">
+        <createTable tableName="application_user_role_binding">
+            <column name="application_user_id" type="bigserial" remarks="Ссылка на таблицу пользователей"/>
+            <column name="role_id" type="text" remarks="Ссылка на таблицу ролей"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="application_user_role_binding"
+                                 baseColumnNames="application_user_id"
+                                 constraintName="fk_application_user_binding_application_user_id"
+                                 referencedTableName="application_user"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="application_user_role_binding"
+                                 baseColumnNames="role_id"
+                                 constraintName="fk_application_user_binding_role_id"
+                                 referencedTableName="application_user_role"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>
