@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:14
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: shortlink
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    restart: always
+
+  shortlink-service:
+    container_name: shortlink-service
+    build: .
+    image: shortlink-image
+    ports:
+      - 8080:8080
+    environment:
+      - "SPRING_PROFILES_ACTIVE=prod"
+    depends_on:
+      - postgres

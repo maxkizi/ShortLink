@@ -58,6 +58,9 @@ public class ShortLinkServiceImpl implements ShortLinkService {
 
     @Override
     public void deleteLink(String shortLink) {
+        if (!repository.existsById(shortLink)) {
+            throw new LinkNotFoundException();
+        }
         repository.deleteById(shortLink);
     }
 
@@ -104,7 +107,7 @@ public class ShortLinkServiceImpl implements ShortLinkService {
         long currentTimeInMinutes = new Date().getTime() / 1000 / 60;
         long createdTimeInMinutes = linkEntity.getCreatedAt().getTime() / 1000 / 60;
 
-        if((currentTimeInMinutes - createdTimeInMinutes) >= expirationMinutes){
+        if ((currentTimeInMinutes - createdTimeInMinutes) >= expirationMinutes) {
             repository.deleteById(linkEntity.getShortLink());
             throw new ExpireLinkException();
         }
