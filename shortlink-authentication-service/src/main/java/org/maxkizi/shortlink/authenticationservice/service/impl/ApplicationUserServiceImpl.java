@@ -18,13 +18,8 @@ public class ApplicationUserServiceImpl implements UserDetailsService, Applicati
     private final ApplicationUserRepository repository;
 
     @Override
-    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        return repository.findByLogin(login);
-    }
-
-    @Override
-    public ApplicationUser findById(Long id) {
-        return repository.findById(id).orElseThrow(UserNotFoundException::new);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return repository.findByUsername(username);
     }
 
     @Override
@@ -43,9 +38,9 @@ public class ApplicationUserServiceImpl implements UserDetailsService, Applicati
     }
 
     @Override
-    public void delete(Long id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
+    public void delete(String username) {
+        if (repository.existsById(username)) {
+            repository.deleteById(username);
         } else {
             throw new UserNotFoundException();
         }

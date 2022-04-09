@@ -6,3 +6,5 @@ spring:
     open-in-view: false
   liquibase:
     change-log: classpath:/db/liquibase-changelog.xml
+expirationTokenMinutes: 15
+secretKey: -KaPdSgVkYp3s5v8y/B?E(H+MbQeThWm

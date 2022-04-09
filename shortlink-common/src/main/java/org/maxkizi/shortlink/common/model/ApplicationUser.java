@@ -3,6 +3,7 @@ package org.maxkizi.shortlink.common.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.maxkizi.shortlink.common.model.role.ApplicationUserRole;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,20 +33,18 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class ApplicationUser implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "username")
+    private String username;
+    @Column(name = "password")
+    private String password;
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
-    @Column(name = "login")
-    private String login;
-    @Column(name = "password")
-    private String password;
-    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "application_user_role_binding",
-            joinColumns = @JoinColumn(name = "application_user_id"),
+            joinColumns = @JoinColumn(name = "username"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<ApplicationUserRole> roles;
@@ -63,10 +62,5 @@ public class ApplicationUser implements UserDetails {
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getId().getRoleType().getRoleName()))
                 .collect(Collectors.toSet());
-    }
-
-    @Override
-    public String getUsername() {
-        return login;
     }
 }

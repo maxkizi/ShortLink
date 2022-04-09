@@ -5,7 +5,6 @@ import org.maxkizi.shortlink.common.model.ApplicationUser;
 import java.util.List;
 
 public interface ApplicationUserService {
-    ApplicationUser findById(Long id);
 
     List<ApplicationUser> list();
 
@@ -13,5 +12,5 @@ public interface ApplicationUserService {
 
     ApplicationUser update(ApplicationUser user);
 
-    void delete(Long id);
+    void delete(String username);
 }

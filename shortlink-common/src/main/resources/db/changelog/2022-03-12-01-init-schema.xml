@@ -20,8 +20,11 @@
 
     <changeSet id="2" author="maxkizi">
         <createTable tableName="application_user" remarks="Таблица пользователей сервиса">
-            <column name="id" type="bigserial" autoIncrement="true" remarks="Id пользователя">
+            <column name="username" type="text" remarks="Уникальное имя пользователя">
                 <constraints primaryKey="true"/>
+            </column>
+            <column name="password" type="text" remarks="Пароль пользователя">
+                <constraints nullable="false"/>
             </column>
             <column name="first_name" type="text" remarks="Имя пользователя">
                 <constraints nullable="false"/>
@@ -29,16 +32,11 @@
             <column name="last_name" type="text" remarks="Фамилия пользователя">
                 <constraints nullable="false"/>
             </column>
-            <column name="login" type="text" remarks="Имя пользователя">
-                <constraints unique="true" nullable="false"/>
-            </column>
-            <column name="password" type="text" remarks="Пароль пользователя">
-                <constraints nullable="false"/>
-            </column>
             <column name="is_enabled" type="boolean" remarks="Флаг  пользователя" value="true">
                 <constraints nullable="false"/>
             </column>
-            <column name="is_credentials_non_expired" type="boolean" remarks="Флаг экспирации данных аутентификации" value="true">
+            <column name="is_credentials_non_expired" type="boolean" remarks="Флаг экспирации данных аутентификации"
+                    value="true">
                 <constraints nullable="false"/>
             </column>
             <column name="is_account_non_locked" type="boolean" remarks="Флаг блокировки аккаунта" value="true">
@@ -55,22 +53,22 @@
             <column name="id" type="text" remarks="Уникальное имя роли">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="description" type="text"  remarks="Описание роли">
-                <constraints nullable="false" />
+            <column name="description" type="text" remarks="Описание роли">
+                <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
 
     <changeSet id="4" author="maxkizi">
         <createTable tableName="application_user_role_binding">
-            <column name="application_user_id" type="bigserial" remarks="Ссылка на таблицу пользователей"/>
+            <column name="username" type="text" remarks="Ссылка на таблицу пользователей"/>
             <column name="role_id" type="text" remarks="Ссылка на таблицу ролей"/>
         </createTable>
         <addForeignKeyConstraint baseTableName="application_user_role_binding"
-                                 baseColumnNames="application_user_id"
-                                 constraintName="fk_application_user_binding_application_user_id"
+                                 baseColumnNames="username"
+                                 constraintName="fk_application_user_binding_application_user_name"
                                  referencedTableName="application_user"
-                                 referencedColumnNames="id"/>
+                                 referencedColumnNames="username"/>
         <addForeignKeyConstraint baseTableName="application_user_role_binding"
                                  baseColumnNames="role_id"
                                  constraintName="fk_application_user_binding_role_id"

@@ -3,7 +3,7 @@ package org.maxkizi.shortlink.common.repository;
 import org.maxkizi.shortlink.common.model.ApplicationUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ApplicationUserRepository extends JpaRepository<ApplicationUser, Long> {
+public interface ApplicationUserRepository extends JpaRepository<ApplicationUser, String> {
 
-    ApplicationUser findByLogin(String login);
+    ApplicationUser findByUsername(String username);
 }
