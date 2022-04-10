@@ -1,4 +1,4 @@
-package org.maxkizi.shortlink.authenticationservice.jwt;
+package org.maxkizi.shortlink.common.config;
 
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;

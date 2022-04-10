@@ -1,11 +1,11 @@
 package org.maxkizi.shortlink.authenticationservice.service;
 
+import io.jsonwebtoken.lang.Strings;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.maxkizi.shortlink.authenticationservice.dto.UserCredentialsDto;
 import org.maxkizi.shortlink.authenticationservice.service.impl.BaseIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
 class AuthenticationServiceTest extends BaseIntegrationTest {
 
@@ -22,7 +22,7 @@ class AuthenticationServiceTest extends BaseIntegrationTest {
     @Test
     public void authenticationTest() {
         String jwtToken = authenticationService.authenticate(new UserCredentialsDto(GUEST_USER_NAME, GUEST_USER_PASSWORD));
-        Assertions.assertTrue(StringUtils.hasText(jwtToken));
+        Assertions.assertTrue(Strings.hasText(jwtToken));
     }
 
     @Test

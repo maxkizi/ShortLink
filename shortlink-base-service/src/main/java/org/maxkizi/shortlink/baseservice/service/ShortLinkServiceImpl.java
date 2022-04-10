@@ -29,7 +29,7 @@ public class ShortLinkServiceImpl implements ShortLinkService {
     private final LinkRepository repository;
     private final LinkEntityConverter converter;
 
-    @Value("${expirationMinutes}")
+    @Value("${expirationLinkMinutes}")
     private Long expirationMinutes;
 
 
