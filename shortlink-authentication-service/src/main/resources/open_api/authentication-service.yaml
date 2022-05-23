@@ -1,0 +1,132 @@
+openapi: 3.0.2
+info:
+  description: Сервис аутентификации и регистрации пользователей
+  version: 1.0.0
+  title: Authentication service
+  contact:
+    email: maxkizi@yandex.ru
+servers:
+  - url: http://localhost:8081/api/v1
+tags:
+  - name: AuthenticationController
+    description: Получение jwt токена
+
+  - name: SignupController
+    description: Регистрация пользователя
+paths:
+  /authenticate:
+    post:
+      tags:
+        - AuthenticationController
+      summary: Получение jwt токена
+      description: Получение jwt токена
+      requestBody:
+        content:
+          applicaiton/json:
+            schema:
+              $ref: '#/components/schemas/UserCredentialsDto'
+      responses:
+        '200':
+          description: ok
+          content:
+            text:
+              schema:
+                type: string
+                example: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbl91c2VyIiwiaWF0IjoxNjUzMzM0NzQwLCJleHAiOjE2NTMzMzU2NDAsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX0dVRVNUIn0seyJhdXRob3JpdHkiOiJST0xFX0FETUlOIn1dfQ.nub66PgUrCGu-_dW63KU2MruADSQPlqZN90gK3tadT0
+
+                description: Jwt токен
+        '400':
+          description: Bad request
+          content:
+            text:
+              schema:
+                type: string
+                example: Пользователь не зарегистрирован
+
+        '401':
+          description: Unauthorized
+
+  /signup:
+    post:
+      tags:
+        - SignupController
+      summary: Регистрация пользователя
+      description: Регистрация пользователя
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationUserDto'
+
+      responses:
+        '200':
+          description: Ok
+
+
+        '400':
+          description: Bad request
+          content:
+            text:
+              schema:
+                type: string
+                example: Пользователь с таким username уже зарегистрирован
+
+
+
+
+
+components:
+  schemas:
+    UserCredentialsDto:
+      type: object
+      properties:
+        username:
+          type: string
+          example: maxim
+          description: Уникальное имя пользователя
+        password:
+          type: string
+          example: secure-password
+          description: Пароль
+      required: [username, password]
+
+    ApplicationUserDto:
+      type: object
+      properties:
+        username:
+          type: string
+          example: maxim
+          description: Уникальное имя пользователя
+        password:
+          type: string
+          example: secure-password
+          description: Пароль
+        firstName:
+          type: string
+          example: Максим
+          description: Имя
+        lastName:
+          type: string
+          example: Кизилов
+          description: Фамилия
+      required: [username, password, firstName, lastName]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

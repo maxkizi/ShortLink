@@ -18,8 +18,12 @@ public class ApplicationUserServiceImpl implements UserDetailsService, Applicati
     private final ApplicationUserRepository repository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return repository.findByUsername(username);
+    public UserDetails loadUserByUsername(String username) {
+        try {
+            return repository.findByUsername(username);
+        } catch (UsernameNotFoundException e) {
+            throw new UserNotFoundException();
+        }
     }
 
     @Override
