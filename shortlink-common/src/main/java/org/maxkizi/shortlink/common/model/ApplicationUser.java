@@ -49,13 +49,13 @@ public class ApplicationUser implements UserDetails {
     )
     private Set<ApplicationUserRole> roles;
     @Column(name = "is_account_non_expired")
-    private boolean isAccountNonExpired;
+    private boolean isAccountNonExpired = true;
     @Column(name = "is_account_non_locked")
-    private boolean isAccountNonLocked;
+    private boolean isAccountNonLocked = true;
     @Column(name = "is_credentials_non_expired")
-    private boolean isCredentialsNonExpired;
+    private boolean isCredentialsNonExpired = true;
     @Column(name = "is_enabled")
-    private boolean isEnabled;
+    private boolean isEnabled = true;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

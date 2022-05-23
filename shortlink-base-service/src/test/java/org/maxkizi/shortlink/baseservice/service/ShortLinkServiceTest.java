@@ -10,7 +10,7 @@ import org.maxkizi.shortlink.common.repository.LinkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-class ShortLinkServiceImplTest extends BaseIntegrationTest {
+class ShortLinkServiceTest extends BaseIntegrationTest {
     private static final String LINK = "https://github.com/maxkizi/ShortLink/blob/master/pom.xml";
     private static final String BROKEN_LINK = "https://github.com/maxkizi/ShortLink/blo/master/pom.xml";
 
@@ -18,7 +18,7 @@ class ShortLinkServiceImplTest extends BaseIntegrationTest {
     private final LinkRepository repository;
 
     @Autowired
-    public ShortLinkServiceImplTest(ShortLinkService service, LinkRepository repository) {
+    public ShortLinkServiceTest(ShortLinkService service, LinkRepository repository) {
         this.service = service;
         this.repository = repository;
     }

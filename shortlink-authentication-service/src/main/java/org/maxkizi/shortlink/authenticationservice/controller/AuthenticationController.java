@@ -7,21 +7,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import static org.maxkizi.shortlink.authenticationservice.controller.Controllers.AUTHENTICATE;
+
 @RestController
 @RequiredArgsConstructor
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-
-    @PostMapping("/api/v1/authenticate")
+    @PostMapping(AUTHENTICATE)
     public String getJwtToken(@RequestBody UserCredentialsDto userCredentialsDto) {
         return authenticationService.authenticate(userCredentialsDto);
     }
-
-    @PostMapping("/api/v1/signup")
-    public String signup(@RequestBody UserCredentialsDto userCredentialsDto) {
-        return "success";
-    }
-
 }

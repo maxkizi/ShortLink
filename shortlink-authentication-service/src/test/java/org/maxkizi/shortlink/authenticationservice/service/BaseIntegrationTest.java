@@ -1,4 +1,4 @@
-package org.maxkizi.shortlink.authenticationservice.service.impl;
+package org.maxkizi.shortlink.authenticationservice.service;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
