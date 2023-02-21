@@ -10,13 +10,15 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.crypto.SecretKey;
+
 @Configuration
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@ConditionalOnProperty(value = "jwtAuthenticationEnabled", havingValue = "true")
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+@ConditionalOnProperty(value = "securityEnabled", havingValue = "true")
+public class SecurityEnabledConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final JwtFilter jwtFilter;
+    private final SecretKey secretKey;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -24,7 +26,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new JwtFilter(secretKey), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .anyRequest()
                 .authenticated();

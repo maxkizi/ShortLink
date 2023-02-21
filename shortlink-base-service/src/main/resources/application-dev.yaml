@@ -9,4 +9,4 @@ spring:
     password: postgres
 
 
-jwtAuthenticationEnabled: false
+securityEnabled: true

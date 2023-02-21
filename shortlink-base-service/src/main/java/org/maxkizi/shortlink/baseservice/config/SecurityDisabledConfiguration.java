@@ -5,9 +5,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 
-@ConditionalOnProperty(value = "jwtAuthenticationEnabled", havingValue = "false")
+@ConditionalOnProperty(value = "securityEnabled", havingValue = "false")
 @Configuration
-public class NoSecurityConfiguration {
+public class SecurityDisabledConfiguration {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
