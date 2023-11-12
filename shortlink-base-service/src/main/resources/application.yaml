@@ -7,5 +7,16 @@ spring:
   liquibase:
     change-log: classpath:/db/liquibase-changelog.xml
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+
 secretKey: -KaPdSgVkYp3s5v8y/B?E(H+MbQeThWm
 expirationLinkMinutes: 10

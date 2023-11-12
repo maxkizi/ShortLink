@@ -28,6 +28,7 @@ public class ShortLinkServiceImpl implements ShortLinkService {
     private static final String HTTPS = "https";
     private final LinkRepository repository;
     private final LinkEntityConverter converter;
+    private final RestTemplate restTemplate;
 
     @Value("${expirationLinkMinutes}")
     private Long expirationMinutes;
@@ -96,7 +97,7 @@ public class ShortLinkServiceImpl implements ShortLinkService {
 
     private void checkHealth(String fullLink) {
         try {
-            new RestTemplate().exchange(fullLink, HttpMethod.GET, null, String.class);
+            restTemplate.exchange(fullLink, HttpMethod.GET, null, String.class);
         } catch (RestClientException e) {
             log.error("Нерабочая ссылка: {}", fullLink);
             throw new NotWorkingLinkException();
